@@ -4,6 +4,7 @@ from django.views.generic import TemplateView, CreateView
 
 from blogs.models import PostModel
 from pages.forms import ContactModelForm
+from .models import BannerModel
 
 
 class HomePageView(TemplateView):
@@ -12,6 +13,7 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['posts'] = PostModel.objects.order_by('-id')[:3]
+        data['banners'] = BannerModel.objects.filter(is_active=True)
         return data
 
 
