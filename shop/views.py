@@ -1,3 +1,4 @@
+from django.db.models import Min, Max
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
@@ -41,6 +42,11 @@ class ShopView(ListView):
             qs = qs.order_by('price')
         elif sort == '-price':
             qs = qs.order_by('-price')
+
+        price = self.request.GET.get('price')
+        if price:
+            min, max = price.split(';')
+            qs = qs.filter(real_price__gte=min, real_price__lte=max)
         return qs
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -50,6 +56,7 @@ class ShopView(ListView):
         data['sizes'] = SizeModel.objects.all()
         data['brands'] = BrandModel.objects.all()
         data['colors'] = ColorModel.objects.all()
+        data['min_price'], data['max_price'] = ProductModel.objects.aggregate(Min('price'), Max('price')).values()
         return data
 
 

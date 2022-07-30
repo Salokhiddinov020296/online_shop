@@ -1,12 +1,14 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load mytags %}
 {% block extra-css %}
     <style>
-        a:hover{
+        a:hover {
             cursor: pointer;
         }
     </style>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
 {% endblock %}
 {% block content %}
 
@@ -49,9 +51,13 @@
                                     <p>Sort by Price:</p>
                                     <select onchange="addUrlParameter('sort', this.value)">
                                         <option value="">-----</option>
-                                        <option {% if request.GET.sort == 'price' %}selected{% endif %} value="price">Low To High</option>
-                                        <option {% if request.GET.sort == '-price' %}selected{% endif %} value="-price">High to Low</option>
-{#                                        <option value="sale">Sale</option>#}
+                                        <option {% if request.GET.sort == 'price' %}selected{% endif %} value="price">
+                                            Low To High
+                                        </option>
+                                        <option {% if request.GET.sort == '-price' %}selected{% endif %} value="-price">
+                                            High to Low
+                                        </option>
+                                        {#                                        <option value="sale">Sale</option>#}
                                     </select>
                                 </div>
                             </div>
@@ -86,15 +92,31 @@
 {% endblock %}
 
 {% block extra-js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
     <script>
-        function addUrlParameter(name, value){
+        function addUrlParameter(name, value) {
             let searchParameter = new URLSearchParams(window.location.search)
-            if(searchParameter.has(name) && searchParameter.get(name) == value){
+            if (searchParameter.has(name) && searchParameter.get(name) == value) {
                 searchParameter.delete(name)
-            }else{
+            } else {
                 searchParameter.append(name, value)
             }
-            window.location.search=searchParameter.toString()
+            window.location.search = searchParameter.toString()
         }
+
+        $(".js-range-slider").ionRangeSlider({
+            type: "double",
+            min: {{ min_price }},
+            max: {{ max_price }},
+            from: {% get_current_price request 0 %},
+            to: {% get_current_price request 1 %},
+            grid: true,
+            prefix: "$",
+            onFinish(data){
+                addUrlParameter('price', data.from.toString() + ';' + data.to.toString())
+            }
+        });
     </script>
+
 {% endblock %}

@@ -69,6 +69,7 @@ class ProductModel(models.Model):
     short_description = models.CharField(max_length=255, verbose_name=_('short description'))
     long_description = RichTextUploadingField(verbose_name=_('long description'))
     price = models.FloatField(verbose_name=_('price'))
+    real_price = models.FloatField(verbose_name=_("real price"), default=0)
     discount = models.PositiveSmallIntegerField(default=0, verbose_name=_('discount'))
     main_image = models.ImageField(upload_to='products/', verbose_name=_('main_image'))
     category = models.ForeignKey(CategoryModel, related_name='products', on_delete=models.RESTRICT)
@@ -78,11 +79,6 @@ class ProductModel(models.Model):
     brand = models.ForeignKey(BrandModel, related_name='products', verbose_name=_('brand'), on_delete=models.RESTRICT,
                               null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('created_at'))
-
-    def get_price(self):
-        if self.discount:
-            return ((100 - self.discount) / 100) * self.price
-        return self.price
 
     def is_discount(self):
         return bool(self.discount)
