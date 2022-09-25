@@ -1,4 +1,5 @@
 {% load static %}
+{% load mytags %}
 <div class="product__item sale">
     <div class="product__item__pic set-bg" data-setbg="{{ product.main_image.url }}">
         {% if product.is_discount %}
@@ -9,8 +10,19 @@
                   style="background-color: #FFFFFF; color: #0b0b0b;margin-top: 30px; width: 65.83px">New</span>
         {% endif %}
         <ul class="product__hover">
-            <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a>
-            </li>
+            {% if request.user.is_authenticated %}
+                {% if product|is_wishlist:request %}
+                    <li>
+                        <a href="{% url 'shop:wishlist' pk=product.pk %}?next={{ request.path }}">
+                            <img src="{% static 'img/heart.png' %}" alt=""></a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'shop:wishlist' pk=product.pk %}?next={{ request.path }}">
+                            <img src="{% static 'img/icon/heart.png' %}" alt=""></a>
+                    </li>
+                {% endif %}
+            {% endif %}
             <li><a href="{% url 'shop:detail' pk=product.pk %}"><img src="{% static 'img/icon/search.png' %}"
                                                                      alt=""></a>
             </li>
@@ -18,7 +30,13 @@
     </div>
     <div class="product__item__text">
         <h6>{{ product.title }}</h6>
-        <a href="#" class="add-cart">+ Add To Cart</a>
+        <a href="{% url 'shop:cart' id=product.pk %}?next={{ request.path }}" class="add-cart">
+            {% if product|is_cart:request %}
+                - Remove From Cart
+            {% else %}
+                + Add To Cart
+            {% endif %}
+        </a>
         <div class="rating">
             <i class="fa fa-star"></i>
             <i class="fa fa-star"></i>

@@ -3,8 +3,8 @@
         <form action="{% url 'shop:shop' %}" method="get">
             <input name="search" value="{{ request.GET.search }}" type="text" placeholder="Search...">
             <button type="submit"><span class="icon_search"></span></button>
-            <a style="color: #0b0b0b" href="{% url 'shop:shop' %}">Clear Filter</a>
         </form>
+        <a style="color: #0b0b0b" href="{% url 'shop:shop' %}">Clear Filter</a>
     </div>
     <div class="shop__sidebar__accordion">
         <div class="accordion" id="accordionExample">
