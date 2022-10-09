@@ -131,7 +131,7 @@
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
 
-    if(mm == 12) {
+    if (mm == 12) {
         mm = '01';
         yyyy = yyyy + 1;
     } else {
@@ -214,3 +214,16 @@
     });
 
 })(jQuery);
+$(function () {
+
+    $('.btn-link[aria-expanded="true"]').closest('.accordion-item').addClass('active');
+    $('.collapse').on('show.bs.collapse', function () {
+        $(this).closest('.accordion-item').addClass('active');
+    });
+
+    $('.collapse').on('hidden.bs.collapse', function () {
+        $(this).closest('.accordion-item').removeClass('active');
+    });
+
+
+});
