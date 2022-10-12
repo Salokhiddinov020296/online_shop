@@ -52,7 +52,7 @@ class UsersModel(AbstractUser):
 
 
 class ProfileModel(models.Model):
-    user = models.OneToOneField(UsersModel, on_delete=models.CASCADE)
+    user = models.OneToOneField(UsersModel, on_delete=models.CASCADE, related_name='profiles')
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=255, null=True, blank=True)
